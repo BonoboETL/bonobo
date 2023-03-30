@@ -61,12 +61,12 @@ class ETLCommand(BaseCommand):
             for i, graph in enumerate(graph_coll):
                 if not isinstance(graph, bonobo.Graph):
                     raise ValueError("Expected a Graph instance, got {!r}.".format(graph))
-                print(term.lightwhite("{}. {}".format(i + 1, graph.name or repr(graph).strip("<>"))))
+                self.stdout.write(term.lightwhite("{}. {}".format(i + 1, graph.name or repr(graph).strip("<>"))))
                 result = bonobo.run(graph, services=services, strategy=strategy)
                 results.append(result)
                 for node in result.nodes:
-                    print(node.get_statistics_as_string(), node.get_flags_as_string())
-                print(term.lightblack(" ... return value: " + str(result)))
+                    self.stdout.write("{} {}".format(node.get_statistics_as_string(), node.get_flags_as_string()))
+                self.stdout.write(term.lightblack(" ... return value: " + str(result)))
 
         return results
 
@@ -78,6 +78,6 @@ class ETLCommand(BaseCommand):
         self.stderr.style_func = lambda x: Fore.LIGHTRED_EX + Back.RED + "!" + Style.RESET_ALL + " " + x
 
         try:
-            return self.run(*args, **options)
+            self.run(*args, **options)
         finally:
             self.stdout, self.stderr = _stdout_backup, _stderr_backup
