@@ -1,7 +1,7 @@
 import bisect
 import functools
-from collections import Sequence
 
+from collections.abc import Sequence
 
 class sortedlist(list):
     """
